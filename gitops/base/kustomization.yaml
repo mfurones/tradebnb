@@ -5,3 +5,4 @@ resources:
   - service.yml
   - deployment.yml
   - volume-db.yml
+  - sealed-secret.yml
