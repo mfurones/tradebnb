@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: tb-pvv-mysql
+  labels:
+    type: local
+spec:
+  hostPath:
+    path: "/mnt/sqldata/dev"

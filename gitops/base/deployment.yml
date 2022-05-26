@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tb-dep-mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql/mysql-server:8.0.27
+        imagePullPolicy: IfNotPresent
+        args:
+          - "--default-authentication-plugin=mysql_native_password"
+        env:
+        - name: MYSQL_ROOT_PASSWORD 
+          valueFrom:
+            secretKeyRef:
+              name: tb-sec-mysql
+              key: rpass
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: tb-sec-mysql
+              key: uusr
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tb-sec-mysql
+              key: upass
+        - name: MYSQL_DATABASE
+          value: "bnctradedb"
+        ports:
+        - containerPort: 3306
+          name: mysql-port
+        volumeMounts:
+        - name: tb-ps-mysql
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: tb-ps-mysql
+        persistentVolumeClaim:
+          claimName: tb-pvc-mysql
